@@ -1,15 +1,21 @@
-# Contribution [#]: [Issue Title]
+# Contribution #1: [Feature Request]: Automatically change workflow tab layout on mobile screen
 
-**Contribution Number:** [1 / 2 / 3]  
-**Student:** [Your Name]  
-**Issue:** [GitHub issue link]  
-**Status:** [Phase I / Phase II / Phase III / Phase IV] [In Progress / Complete]
+**Contribution Number:** 1
+
+**Student:** Greg Kimatov
+
+**Issue:** https://github.com/Comfy-Org/ComfyUI_frontend/issues/2891 
+
+**Status:** Phase I Complete
 
 ---
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
+
+This issue stood out to me because responsive UI development is an area where I have direct experience. I've built component-driven interfaces using Lightning Blits and TypeScript, which gives me a solid foundation for implementing breakpoint-aware layout logic. The feature request is well-defined and maps closely to patterns I've worked with before, making it a strong candidate for a first contribution to this codebase.
+
+I'm also motivated by the broader context this work lives in. ComfyUI is a widely-used tool in the AI image generation space, and improving its accessibility on mobile devices directly expands who can use and experiment with these models. As someone interested in how AI tools reach end users, contributing to the frontend experience feels meaningful beyond the technical problem itself. I'm looking forward to engaging with a production-scale codebase in this space and developing a stronger familiarity with the project's architecture and conventions.
 
 ---
 
