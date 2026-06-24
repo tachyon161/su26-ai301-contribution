@@ -6,7 +6,7 @@
 
 **Issue:** https://github.com/Comfy-Org/ComfyUI_frontend/issues/2891 
 
-**Status:** Phase II Complete
+**Status:** Phase III Complete
 
 ---
 
