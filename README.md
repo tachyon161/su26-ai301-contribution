@@ -6,7 +6,7 @@
 
 **Issue:** https://github.com/Comfy-Org/ComfyUI_frontend/issues/2891 
 
-**Status:** Phase III Complete
+**Status:** Phase IV Complete
 
 ---
 
@@ -197,15 +197,32 @@ https://github.com/tachyon161/ComfyUI_frontend/commit/fd0295b75a1b629716a97ac324
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** https://github.com/Comfy-Org/ComfyUI_frontend/pull/13505
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** 
+
+## Summary
+
+Make the workflow tab strip touch-friendly on mobile viewports instead of letting tabs squish into an unusable state below the `md` breakpoint.
+
+## Changes
+
+- **What**: In `WorkflowTabs.vue`, detect narrow viewports (`useBreakpoints(breakpointsTailwind).smaller('md')`, <768px) and enlarge tab touch targets (min 120×44px) while preventing shrink, so the horizontal strip overflows into the existing scroll-arrow / overflow-menu affordance rather than compressing. Desktop layout is unchanged — all mobile rules are scoped behind a `workflow-tabs-container-mobile` class.
+
+## Review Focus
+
+- Mobile CSS is scoped to the new class only; the original `min-width: 90px` desktop rule is retained unchanged, so desktop rendering should be byte-for-byte identical.
+- Overflow handling reuses the existing scroll chevrons + `WorkflowOverflowMenu` (no new overflow UI); they now engage on mobile because tabs no longer shrink below tappable size.
+- New `@mobile` e2e test (`browser_tests/tests/workflowTabsMobile.spec.ts`) asserts touch-target dimensions and overflow scrolling; it has not yet been run against a live backend.
+
+Fixes #2891
+
 
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** Awaiting review
 
 ---
 
@@ -223,10 +240,6 @@ https://github.com/tachyon161/ComfyUI_frontend/commit/fd0295b75a1b629716a97ac324
 
 [Reflection on your process]
 
----
 
-## Resources Used
-
-- [Link to helpful documentation]
 - [Tutorial or Stack Overflow post that helped]
 - [GitHub issues or discussions that helped]
