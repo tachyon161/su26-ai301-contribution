@@ -149,27 +149,46 @@ Challenges / things that shaped the result:
 - One test-authoring snag: vi.hoisted(() => ref(...)) failed because hoisting runs before the vue import. Fixed by letting the vi.mock factory reference a module-level ref lazily (only read when useMediaQuery is actually called at test runtime).
 - An IDE diagnostic flagged the WorkflowsSidebarTab.vue import as unresolvable — a stale .vue false positive; vue-tsc (pnpm typecheck) confirmed it's clean.
 
-[What you built this week, challenges faced, decisions made]
 
-### Week [Y] Progress
+### Week 4 Progress
 
-[Continue documenting as you work]
+Shipped a viewport-responsive fix for the workflow tab strip, pushed to fix-issue-2891 on my fork (commit a914a5070). Two files:
+
+`src/components/topbar/WorkflowTabs.vue` — Added mobile detection via useBreakpoints(breakpointsTailwind).smaller('md') (the repo's existing pattern, matching MiniMap.vue). Below 768px, tabs now get enlarged touch targets (min-width: 120px, min-height: 44px) and stop shrinking (flex-shrink: 0), so they stay tappable and overflow into the existing scroll-chevron/overflow-menu affordance instead of squishing. Desktop is untouched — all mobile rules are scoped behind a workflow-tabs-container-mobile class.
+
+`browser_tests/tests/workflowTabsMobile.spec.ts` — New @mobile e2e test (runs on the Pixel 5 / 393px project): opens several workflows, asserts every tab's bounding box is ≥120×44px and that the strip stays visible and scrolls on overflow.
+
+All quality gates pass: format, typecheck, lint, knip, typecheck:browser, browser-test eslint/oxlint, and the 4 unit tests.
+
+Challenges / things that shaped the result:
+
+- I initially built the wrong solution: I hid the tab strip on mobile and surface workflows through the sidebar (a new useResponsiveLayout composable + reusing the existing WorkflowTabsPosition setting). It passed all gates. It turned out the issue author proposed the opposite solution: keep the horizontal strip and enhance it for mobile (VueUse breakpoints, bigger touch targets, overflow indicators). The entire first implementation was scrapped.
+
+- A unit test that violated the project's own testing rules. I first wrote unit tests asserting the mobile CSS class appears on the container. Lint flagged them (testing-library/no-container), and they were exactly the style/change-detector tests AGENTS.md prohibits. Touch-target sizing is a layout concern happy-dom can't verify anyway. Removed them and moved that verification to the Playwright e2e layer, which is the correct place for it.
 
 ### Code Changes
 
 - **Files modified:**
-src/components/graph/GraphCanvas.vue — workflowTabsPosition now from the composable
-src/components/sidebar/tabs/BaseWorkflowsSidebarTab.vue — same; dropped the now-unused useSettingStore import
-src/platform/workflow/management/composables/useWorkflowsSidebarTab.ts — badge gate reads resolved position.value
+WorkflowTabs.vue:
+  - Added useBreakpoints import + isMobile detection (smaller('md'))
+  - Bound a workflow-tabs-container-mobile class on the container
+  - Scoped mobile CSS: tabs min-width: 120px, min-height: 44px, flex-shrink: 0; overflow arrows min-width: 44px
 
 - **Files added:**
-src/composables/element/useWorkflowTabsPosition.ts — the composable
-src/composables/element/useWorkflowTabsPosition.test.ts — unit tests
-Unchanged on purpose: WorkflowTabs.vue and WorkflowTab.vue are byte-for-byte untouched (I added then reverted a min-width media query after confirming it was redundant).
+workFlowTabsMobile.spec.ts:
+  - @mobile e2e test asserting touch-target sizing and overflow-scroll behavior
 
 - **Key commits:**
-https://github.com/tachyon161/ComfyUI_frontend/commit/fd0295b75a1b629716a97ac32408356ff2cd6417
+https://github.com/tachyon161/ComfyUI_frontend/commit/a914a5070120719f1478e378cf71d909ca628807#diff-fdeeb0f02d5a417a00d49a6e2e2190132f3f326af8d68cf615f523c053af2a81
+https://github.com/tachyon161/ComfyUI_frontend/commit/fd0295b75a1b629716a97ac32408356ff2cd6417 (no longer exists)
+
 - **Approach decisions:**
+  - Enhanced-strip over sidebar-replacement — align with the issue author's actual request; keeps open workflows always visible (your core concern) rather than hiding them behind a toggle.
+  - Reuse the repo's useBreakpoints pattern — no new composable, no new setting; consistent with MiniMap, AssetBrowserModal, etc.
+  - Didn't redesign the overflow menu into a "+X count" badge — the author listed it as a nice-to-have; the existing chevrons + overflow menu already surface hidden tabs and now engage on mobile because tabs no longer shrink. Kept scope to the bug.
+  - Desktop byte-for-byte unchanged — original min-width: 90px retained; every mobile rule scoped behind the new class.
+
+(OLD DECISIONS, not relevant anymore)
   - Reuse the existing setting, don't add a parallel one — avoids duplicate/conflicting UX and keeps the diff to one composable + three one-line call-site swaps.
   - Centralize resolution in one composable — the three consumers were independently calling settingStore.get('Comfy.Workflow.WorkflowTabsPosition'); DRYing them behind useWorkflowTabsPosition() means the responsive rule lives in exactly one place.
   - Breakpoint (max-width: 767px) — pairs with Tailwind's md (≥768px) so "narrow" and "desktop" partition cleanly with no overlap at the boundary.
