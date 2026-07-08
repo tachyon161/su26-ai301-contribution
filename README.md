@@ -150,7 +150,7 @@ Challenges / things that shaped the result:
 - An IDE diagnostic flagged the WorkflowsSidebarTab.vue import as unresolvable — a stale .vue false positive; vue-tsc (pnpm typecheck) confirmed it's clean.
 
 
-### Week 4 Progress
+### Weeks 4-5 Progress
 
 Shipped a viewport-responsive fix for the workflow tab strip, pushed to fix-issue-2891 on my fork (commit a914a5070). Two files:
 
