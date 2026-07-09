@@ -1,8 +1,11 @@
 # Contribution #2: [Issue Title]
 
 **Contribution Number:** 2
+
 **Student:** Greg Kimatov 
+
 **Issue:** [GitHub issue link]  
+
 **Status:** Phase I
 
 ---
